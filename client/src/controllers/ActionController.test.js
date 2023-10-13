@@ -199,4 +199,11 @@ describe('ActionController', () => {
       expect(textarea.selectionEnd).toBe(textarea.value.length);
     });
   });
+
+  // describe('reset method', () => {
+  //   it('should neither update value nor dispatch event when event is null', () => {})
+  //   it('should neither change value nor dispatch event when event does not have required properties', () => {})
+  //   it('should neither change value nor dispatch event when currentValue and newValue are the same', () => {})
+  //   it('should change value and dispatch event when currentValue and newValue are different', () => {})
+  // })
 });
