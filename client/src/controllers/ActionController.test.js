@@ -200,10 +200,60 @@ describe('ActionController', () => {
     });
   });
 
-  // describe('reset method', () => {
-  //   it('should neither update value nor dispatch event when event is null', () => {})
-  //   it('should neither change value nor dispatch event when event does not have required properties', () => {})
-  //   it('should neither change value nor dispatch event when currentValue and newValue are the same', () => {})
-  //   it('should change value and dispatch event when currentValue and newValue are different', () => {})
-  // })
+  describe('reset method', () => {
+    beforeEach(async () => {
+      await setup(
+        `<input
+          id="reset-test"
+          value="the default"
+          type="text"
+          data-controller="w-action"
+          data-action="some-event->w-action#reset"
+        />`,
+      );
+    });
+    it('should not update value when event is null', () => {
+      const input = document.getElementById('reset-test');
+
+      input.dispatchEvent(new CustomEvent(''));
+
+      expect(input.value).toBe('the default');
+      expect(input.value).not.toBe('not the default');
+    });
+
+    it('should not change value when event does not have required properties', () => {
+      const input = document.getElementById('reset-test');
+
+      input.dispatchEvent(
+        new CustomEvent('some-event', {
+          detail: { wrongValue: 'the default' },
+        }),
+      );
+
+      expect(input.value).toBe('the default');
+      expect(input.value).not.toBe('not the default');
+    });
+
+    it('should not change value when current value and new value are the same', () => {
+      const input = document.getElementById('reset-test');
+
+      input.dispatchEvent(
+        new CustomEvent('some-event', { detail: { value: 'the default' } }),
+      );
+
+      expect(input.value).toBe('the default');
+      expect(input.value).not.toBe('not the default');
+    });
+
+    it('should change value when existing value and new value are different', () => {
+      const input = document.getElementById('reset-test');
+
+      input.dispatchEvent(
+        new CustomEvent('some-event', { detail: { value: 'not the default' } }),
+      );
+
+      expect(input.value).toBe('not the default');
+      expect(input.value).not.toBe('the default');
+    });
+  });
 });
