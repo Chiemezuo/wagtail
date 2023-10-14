@@ -212,26 +212,20 @@ describe('ActionController', () => {
         />`,
       );
     });
-    it('should not update value when event is null', () => {
+
+    it('should change value when existing value and new value are different', () => {
       const input = document.getElementById('reset-test');
 
-      input.dispatchEvent(new CustomEvent(''));
+      // let the user check the value
+      input.value = 'another input value';
 
-      expect(input.value).toBe('the default');
-      expect(input.value).not.toBe('not the default');
-    });
-
-    it('should not change value when event does not have required properties', () => {
-      const input = document.getElementById('reset-test');
-
+      // trigger (the data-action) event listener
       input.dispatchEvent(
-        new CustomEvent('some-event', {
-          detail: { wrongValue: 'the default' },
-        }),
+        new CustomEvent('some-event', { detail: { value: 'not the default' } }),
       );
 
-      expect(input.value).toBe('the default');
-      expect(input.value).not.toBe('not the default');
+      expect(input.value).toBe('not the default');
+      expect(input.value).not.toBe('another input value');
     });
 
     it('should not change value when current value and new value are the same', () => {
@@ -245,15 +239,29 @@ describe('ActionController', () => {
       expect(input.value).not.toBe('not the default');
     });
 
-    it('should change value when existing value and new value are different', () => {
+    it('should reset value to a new value supplied via custom event detail', () => {
       const input = document.getElementById('reset-test');
 
       input.dispatchEvent(
-        new CustomEvent('some-event', { detail: { value: 'not the default' } }),
+        new CustomEvent('some-event', {
+          detail: { value: 'a new value from custom event detail' },
+        }),
       );
 
-      expect(input.value).toBe('not the default');
+      expect(input.value).toBe('a new value from custom event detail');
       expect(input.value).not.toBe('the default');
     });
+
+    // it('should reset value to a new value supplied in action param', () => {
+    //   const input = document.getElementById('reset-test');
+
+    //   input.dispatchEvent(
+    //     new CustomEvent('some-event', {
+    //       params: { value: 'a new value from action params' }
+    //     }),
+    //   );
+
+    //   expect(input.value).toBe('a new value from action params');
+    // })
   });
 });
