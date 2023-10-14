@@ -252,16 +252,16 @@ describe('ActionController', () => {
       expect(input.value).not.toBe('the default');
     });
 
-    // it('should reset value to a new value supplied in action param', () => {
-    //   const input = document.getElementById('reset-test');
+    it('should reset value to a new value supplied in action param', () => {
+      const input = document.getElementById('reset-test');
+      input.setAttribute(
+        'data-w-action-value-param',
+        'a new value from action params',
+      );
 
-    //   input.dispatchEvent(
-    //     new CustomEvent('some-event', {
-    //       params: { value: 'a new value from action params' }
-    //     }),
-    //   );
+      input.dispatchEvent(new CustomEvent('some-event'));
 
-    //   expect(input.value).toBe('a new value from action params');
-    // })
+      expect(input.value).toBe('a new value from action params');
+    });
   });
 });
