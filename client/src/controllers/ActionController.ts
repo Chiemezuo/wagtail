@@ -129,6 +129,7 @@ export class ActionController extends Controller<
     this.dispatch('change', {
       bubbles: true,
       cancelable: false,
+      prefix: '',
       target,
     });
   }
