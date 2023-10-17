@@ -39,6 +39,9 @@ Changelog
  * Add the ability to define listing buttons on generic `IndexView` (Sage Abdullah)
  * Add a visual progress bar to the output of the `wagtail_update_image_renditions` management command (Faishal Manzar)
  * Increase the read buffer size to improve efficiency and performance when generating file hashes for document or image uploads, use `hashlib.file_digest` if available (Python 3.11+) (Jake Howard)
+ * API ordering now supports multiple fields (Rohit Sharma, Jake Howard)
+ * Pass block value to `Block.get_template` to allow varying template based on value (Florian Delizy)
+ * Add `InlinePanel` DOM events for when ready and when items added or removed (Faishal Manzar)
  * Fix: Ensure that StreamField's `FieldBlock`s correctly set the `required` and `aria-describedby` attributes (Storm Heg)
  * Fix: Avoid an error when the moderation panel (admin dashboard) contains both snippets and private pages (Matt Westcott)
  * Fix: When deleting collections, ensure the collection name is correctly shown in the success message (LB (Ben) Johnston)
@@ -56,6 +59,8 @@ Changelog
  * Fix: Ensure that pages in moderation show as "Live + In Moderation" in the page explorer rather than "Live + Draft" (Sage Abdullah)
  * Fix: Prevent error when updating reference index for objects with a lazy ParentalKey-related object (Chris Shaw)
  * Fix: Ignore conflicts when inserting reference index entries to prevent race conditions causing uniqueness errors (Chris Shaw)
+ * Fix: Populate the correct return value when creating a new snippet within the snippet chooser (claudobahn)
+ * Fix: Reinstate missing filter by page type on page search (Matt Westcott)
  * Docs: Document `WAGTAILADMIN_BASE_URL` on "Integrating Wagtail into a Django project" page (Shreshth Srivastava)
  * Docs: Replace incorrect screenshot for authors listing on tutorial (Shreshth Srivastava)
  * Docs: Add documentation for building non-model-based choosers using the _queryish_ library (Matt Westcott)
@@ -102,11 +107,16 @@ Changelog
  * Maintenance: Add better deprecation warnings to the `search.Query` & `search.QueryDailyHits` model, move final set of templates from the admin search module to the search promotions contrib module (LB (Ben) Johnston)
  * Maintenance: Add generic `InspectView` to `ModelViewSet` (Sage Abdullah)
  * Maintenance: Migrate select all on focus/click behavior to Stimulus, used on the image URL generator (Chiemezuo Akujobi)
+ * Maintenance: Add support for a `reset` method to support Stimulus driven dynamic field resets via the `w-action` controller (Chiemezuo Akujobi)
 
 5.1.3 (xx.xx.20xx) - IN DEVELOPMENT
 ~~~~~~~~~~~~~~~~~~
 
  * Fix: Fix `SnippetBulkAction` not respecting `models` definition (Sandro Rodrigues)
+ * Fix: Correctly quote non-numeric primary keys on snippet inspect view (Sage Abdullah)
+ * Fix: Prevent crash on snippet inspect view when displaying a null foreign key to an image (Sage Abdullah)
+ * Fix: Populate the correct return value when creating a new snippet within the snippet chooser (claudobahn)
+ * Fix: Reinstate missing filter by page type on page search (Matt Westcott)
 
 
 5.1.2 (25.09.2023)
@@ -515,7 +525,6 @@ Changelog
  * Delay hiding the contents of the side panels when closing, so the animation is smoother (Thibaud Colas)
  * ListBlock now shows item-by-item differences when comparing versions (Tidiane Dia)
  * Implement a new design for chooser buttons with better accessibility (Thibaud Colas)
- * API ordering now supports multiple fields (Rohit Sharma, Jake Howard)
  * Fix: Make sure workflow timeline icons are visible in high-contrast mode (Loveth Omokaro)
  * Fix: Ensure authentication forms (login, password reset) have a visible border in Windows high-contrast mode (Loveth Omokaro)
  * Fix: Ensure visual consistency between buttons and links as buttons in Windows high-contrast mode (Albina Starykova)

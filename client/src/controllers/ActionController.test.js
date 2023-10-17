@@ -201,7 +201,12 @@ describe('ActionController', () => {
   });
 
   describe('reset method', () => {
+    const handleChangeEvent = jest.fn();
+    document.addEventListener('change', handleChangeEvent);
+
     beforeEach(async () => {
+      jest.resetAllMocks();
+
       await setup(
         `<input
           id="reset-test"
@@ -216,19 +221,21 @@ describe('ActionController', () => {
     it('should change value when existing value and new value are different', () => {
       const input = document.getElementById('reset-test');
 
-      // let the user check the value
+      // Change the value to something else (via JS)
       input.value = 'another input value';
+      expect(handleChangeEvent).not.toHaveBeenCalled();
 
-      // trigger (the data-action) event listener
       input.dispatchEvent(
         new CustomEvent('some-event', { detail: { value: 'not the default' } }),
       );
 
       expect(input.value).toBe('not the default');
       expect(input.value).not.toBe('another input value');
+      expect(handleChangeEvent).toHaveBeenCalled();
     });
 
     it('should not change value when current value and new value are the same', () => {
+      expect(handleChangeEvent).not.toHaveBeenCalled();
       const input = document.getElementById('reset-test');
 
       input.dispatchEvent(
@@ -237,9 +244,11 @@ describe('ActionController', () => {
 
       expect(input.value).toBe('the default');
       expect(input.value).not.toBe('not the default');
+      expect(handleChangeEvent).not.toHaveBeenCalled();
     });
 
     it('should reset value to a new value supplied via custom event detail', () => {
+      expect(handleChangeEvent).not.toHaveBeenCalled();
       const input = document.getElementById('reset-test');
 
       input.dispatchEvent(
@@ -250,9 +259,11 @@ describe('ActionController', () => {
 
       expect(input.value).toBe('a new value from custom event detail');
       expect(input.value).not.toBe('the default');
+      expect(handleChangeEvent).toHaveBeenCalled();
     });
 
     it('should reset value to a new value supplied in action param', () => {
+      expect(handleChangeEvent).not.toHaveBeenCalled();
       const input = document.getElementById('reset-test');
       input.setAttribute(
         'data-w-action-value-param',
@@ -262,6 +273,7 @@ describe('ActionController', () => {
       input.dispatchEvent(new CustomEvent('some-event'));
 
       expect(input.value).toBe('a new value from action params');
+      expect(handleChangeEvent).toHaveBeenCalled();
     });
   });
 });
