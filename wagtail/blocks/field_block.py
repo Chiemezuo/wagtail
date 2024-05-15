@@ -86,6 +86,7 @@ class FieldBlock(Block):
         # descendant block type
         icon = "placeholder"
         default = None
+        controller_block = None
 
 
 class FieldBlockAdapter(Adapter):
@@ -116,6 +117,7 @@ class FieldBlockAdapter(Adapter):
                 block.field.widget, "show_add_comment_button", True
             ),
             "strings": {"ADD_COMMENT": _("Add Comment")},
+            "controller_block": block.meta.controller_block,
         }
         if block.field.help_text:
             meta["helpText"] = block.field.help_text

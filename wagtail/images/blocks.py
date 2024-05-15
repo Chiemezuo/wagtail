@@ -55,7 +55,7 @@ class ImageChooserBlockComparison(BlockComparison):
 
 class ImageBlock(StructBlock):
     image = ImageChooserBlock(required=True)
-    alt_text = CharBlock(required=True)
+    alt_text = CharBlock(required=True, controller_block="decorative")
     decorative = BooleanBlock(default=False, required=False)
 
     class Meta:
