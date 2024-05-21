@@ -1,9 +1,5 @@
 {% load wagtailimages_tags %}
 
 <figure>
-    {% if self.decorative %}
-        {% image self.image fill-600x338 loading="lazy" %}
-    {% else %}
-        {% image self.image fill-600x338 loading="lazy" alt=self.alt_text %}
-    {% endif %}
+    {% image value fill-600x338 loading="lazy" %}
 </figure>

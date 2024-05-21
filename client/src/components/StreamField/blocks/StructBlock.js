@@ -189,55 +189,13 @@ export class StructBlockDefinition {
     this.meta = meta;
   }
 
-  matchControlledBlocks(array, prefix) {
-    // Find the block which has a non-null "controller_block" value
-    const controlledBlock = array.find(
-      (block) => block.meta.controller_block !== null,
-    );
-
-    // If such a block is found, find the block it is controlled by
-    if (controlledBlock) {
-      const controllingBlock = array.find(
-        (block) => block.name === controlledBlock.meta.controller_block,
-      );
-
-      if (controllingBlock) {
-        const controlledField = document.getElementById(
-          prefix + `-${controlledBlock.name}`,
-        );
-        const controllingField = document.getElementById(
-          prefix + `-${controllingBlock.name}`,
-        );
-
-        const updateStateInput = () => {
-          if (
-            controllingField.checked ||
-            (controllingField.value !== '' &&
-              controllingField.type !== 'checkbox')
-          ) {
-            controlledField.value = '';
-            controlledField.setAttribute('disabled', true);
-          } else {
-            controlledField.removeAttribute('disabled');
-          }
-        };
-        updateStateInput();
-        controllingField.addEventListener('change', updateStateInput);
-      }
-    }
-  }
-
   render(placeholder, prefix, initialState, initialError) {
-    const block = new StructBlock(
+    return new StructBlock(
       this,
       placeholder,
       prefix,
       initialState,
       initialError,
     );
-
-    this.matchControlledBlocks(block.blockDef.childBlockDefs, prefix);
-
-    return block;
   }
 }
