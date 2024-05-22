@@ -1,10 +1,13 @@
+from django import forms
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 
 from wagtail.admin.compare import BlockComparison
 from wagtail.blocks import BooleanBlock, CharBlock, ChooserBlock, StructBlock
+from wagtail.blocks.struct_block import StructBlockAdapter
 from wagtail.images.models import AbstractImage
+from wagtail.telepath import register
 
 from .shortcuts import get_rendition_or_not_found
 
@@ -57,8 +60,10 @@ class ImageChooserBlockComparison(BlockComparison):
 
 class ImageBlock(StructBlock):
     image = ImageChooserBlock(required=True)
+    decorative = BooleanBlock(
+        default=False, required=False, label="Image is decorative"
+    )
     alt_text = CharBlock(required=False)
-    decorative = BooleanBlock(default=False, required=False)
 
     def get_searchable_content(self, value):
         return []
@@ -127,3 +132,18 @@ class ImageBlock(StructBlock):
     class Meta:
         icon = "image"
         template = "wagtailimages/widgets/image.html"
+
+
+class ImageBlockAdapter(StructBlockAdapter):
+    js_constructor = "wagtail.images.blocks.ImageBlock"
+
+    @cached_property
+    def media(self):
+        structblock_media = super().media
+        return forms.Media(
+            js=structblock_media._js + ["wagtailimages/js/image-chooser-modified.js"],
+            css=structblock_media._css,
+        )
+
+
+register(ImageBlockAdapter(), ImageBlock)
