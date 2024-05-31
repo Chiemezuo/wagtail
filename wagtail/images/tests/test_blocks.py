@@ -1,9 +1,11 @@
 import unittest.mock
 
+from bs4 import BeautifulSoup
 from django.apps import apps
 from django.test import TestCase
 
-from wagtail.images.blocks import ImageChooserBlock
+from wagtail.blocks.struct_block import StructBlockValidationError
+from wagtail.images.blocks import ImageBlock, ImageChooserBlock
 
 from .utils import (
     Image,
@@ -73,3 +75,68 @@ class TestImageChooserBlock(TestCase):
 
         # None should not yield any references
         self.assertListEqual(list(block.extract_references(None)), [])
+
+
+class TestImageBlock(TestImageChooserBlock):
+    def test_render(self):
+        block = ImageBlock()
+        value = {
+            "image": self.image.id,  # An id is expected
+            "alt_text": "Sample alt text",
+            "decorative": False,
+        }
+        html = block.render(block.to_python(value))
+        soup = BeautifulSoup(html, "html.parser")
+        img_tag = soup.find("img")
+
+        # check specific attributes
+        self.assertEqual(img_tag["alt"], value.get("alt_text"))
+        self.assertIn("/media/images/test.", img_tag["src"])
+
+    def test_render_as_decorative(self):
+        block = ImageBlock()
+        value = {
+            "image": self.image.id,  # An id is expected
+            "alt_text": "Sample alt text",
+            "decorative": True,
+        }
+        html = block.render(block.to_python(value))
+        soup = BeautifulSoup(html, "html.parser")
+        img_tag = soup.find("img")
+
+        # check specific attributes
+        self.assertEqual(img_tag["alt"], "")
+        self.assertIn("/media/images/test.", img_tag["src"])
+
+    def test_no_alt_text(self):
+        block = ImageBlock()
+        value = {
+            "image": self.image.id,  # An id is expected
+            "alt_text": None,  # No alt text passed
+            "decorative": False,
+        }
+
+        # Use assertRaises as a context manager to check if a ValidationError is raised
+        with self.assertRaises(StructBlockValidationError) as context:
+            block.clean(block.to_python(value))
+
+        # Check the error message
+        self.assertIn(
+            "Alt text is required for non-decorative images",
+            str(context.exception.block_errors["alt_text"]),
+        )
+
+    def test_wrong_instance_type(self):
+        block = ImageBlock()
+        value = {"image": self.image.id, "alt_text": "Blank", "decorative": False}
+
+        # Use assertRaises as a context manager to check if a ValidationError is raised
+        with self.assertRaises(StructBlockValidationError) as context:
+            # pass in dict instead of normalized image instance
+            block.clean(value)
+
+        # Check the error message
+        self.assertIn(
+            "Expected an image instance, got %r" % value,
+            str(context.exception.block_errors["image"]),
+        )
