@@ -116,7 +116,8 @@ class TestImageBlock(TestImageChooserBlock):
             "decorative": False,
         }
 
-        # Use assertRaises as a context manager to check if a ValidationError is raised
+        # Invalid state when no alt text is given, and image not marked as decorative
+        # Should raise a StructBlock validation error
         with self.assertRaises(StructBlockValidationError) as context:
             block.clean(block.to_python(value))
 
@@ -130,7 +131,8 @@ class TestImageBlock(TestImageChooserBlock):
         block = ImageBlock()
         value = {"image": self.image.id, "alt_text": "Blank", "decorative": False}
 
-        # Use assertRaises as a context manager to check if a ValidationError is raised
+        # Invalid state when value is not an image instance
+        # Should raise a StructBlock validation error
         with self.assertRaises(StructBlockValidationError) as context:
             # pass in dict instead of normalized image instance
             block.clean(value)
