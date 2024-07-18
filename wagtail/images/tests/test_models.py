@@ -790,6 +790,9 @@ class TestRenditions(TestCase):
         # Check that the image instance is the same as the retrieved rendition
         self.assertIs(new_rendition.image, self.image)
 
+        # Check that the image instance is the same as the retrieved rendition
+        self.assertIs(new_rendition.image, self.image)
+
         # changing the image file should invalidate the cache
         self.image.file = get_test_image_file(colour="green")
         self.image.save()
