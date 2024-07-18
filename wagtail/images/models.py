@@ -1227,10 +1227,12 @@ class AbstractRendition(ImageFileMixin, models.Model):
 
     @property
     def alt(self):
-        if self.image.is_decorative:
+        if self.image.decorative:
             return ""
-        else:
+        elif self.image.contextual_alt_text:
             return self.image.contextual_alt_text
+        else:
+            return self.image.default_alt_text
 
     @property
     def attrs(self):
