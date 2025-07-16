@@ -51,8 +51,8 @@ export class FormsetController extends Controller<HTMLElement> {
     'deleted',
     'deleteInput',
     'forms',
-    'maxFormsInput',
     'minFormsInput',
+    'maxFormsInput',
     'orderInput',
     'template',
     'totalFormsInput',
@@ -106,7 +106,7 @@ export class FormsetController extends Controller<HTMLElement> {
   }
 
   /**
-   * Ensure that any deleted containers are hidden when connected (from HTML response)
+   * Ensure that any deleted children are hidden when connected (from HTML POST response)
    * and remove any error message elements so that it doesn't count towards the number
    * of errors on the tab at the top of the page.
    * @todo - check this actually works for any timing issues from w-count controller.
@@ -177,7 +177,6 @@ export class FormsetController extends Controller<HTMLElement> {
     target.setAttribute(
       targetAttrName,
       (target.getAttribute(targetAttrName)?.split(' ') ?? [])
-        // .filter((name) => name !== 'child')
         .concat(['deleted'])
         .join(' '),
     );
@@ -205,12 +204,12 @@ export class FormsetController extends Controller<HTMLElement> {
 
   /**
    * When removed, add the class and update the total count.
+   * Only run if the target was previously a child (non-deleted) target.
    * Also update the DELETE input for this form.
    *
    * @throws {Error} If the DELETE input target cannot be found within the removed form.
    */
   deletedTargetConnected(target: HTMLElement) {
-    // only run if the target was previously a child (non-deleted) target
     if (!this.childTargets.find((child) => child === target)) return;
 
     const targetAttrName = `data-${this.identifier}-target`;
