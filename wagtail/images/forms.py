@@ -75,15 +75,10 @@ class BaseImageForm(BaseCollectionMemberForm):
                     "data-controller": "w-sync",
                     "data-w-sync-target-value": "#id_title",
                     "data-w-sync-name-value": "image",
-                    "data-action": "change->w-sync#apply cut->w-sync#clear focus->w-sync#check",
+                    "data-action": "change->w-sync#apply cut->w-sync#clear",
                 }
             ),
-            "title": forms.TextInput(
-                attrs={
-                    "data-controller": "w-clean",
-                    "data-w-clean-allow-unicode": "true",
-                }
-            ),
+            "title": forms.TextInput(),
             "focal_point_x": forms.HiddenInput(attrs={"class": "focal_point_x"}),
             "focal_point_y": forms.HiddenInput(attrs={"class": "focal_point_y"}),
             "focal_point_width": forms.HiddenInput(

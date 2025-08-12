@@ -198,7 +198,6 @@ export class SyncController extends Controller<HTMLInputElement> {
 
   load() {
     const name = this.element.dataset.wSyncNameValue || '';
-    // const eventValue = this.element.dataset.wSyncEventValue || 'w-sync:apply';
 
     this.element.addEventListener(
       `w-sync:before-apply:${name}`,

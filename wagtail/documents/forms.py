@@ -67,15 +67,10 @@ class BaseDocumentForm(BaseCollectionMemberForm):
                     "data-controller": "w-sync",
                     "data-w-sync-target-value": "#id_title",
                     "data-w-sync-event-value": "wagtail:documents-upload",
-                    "data-action": "change->w-sync#prefillTitleFromFilename cut->w-sync#clear focus->w-sync#check",
+                    "data-action": "change->w-sync#prefillTitleFromFilename cut->w-sync#clear",
                 }
             ),
-            "title": forms.TextInput(
-                attrs={
-                    "data-controller": "w-clean",
-                    "data-w-clean-allow-unicode": "true",
-                }
-            ),
+            "title": forms.TextInput(),
         }
 
     def clean_tags(self):
