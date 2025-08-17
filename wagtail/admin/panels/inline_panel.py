@@ -1,5 +1,4 @@
 import functools
-import json
 
 from django import forms
 from django.forms.formsets import DELETION_FIELD_NAME, ORDERING_FIELD_NAME

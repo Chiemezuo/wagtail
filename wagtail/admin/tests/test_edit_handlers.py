@@ -1442,9 +1442,9 @@ class TestInlinePanel(WagtailTestUtils, TestCase):
         )
 
         # Reordering controls should be present
-        self.assertIn("data-inline-panel-child-move-up", result)
-        self.assertIn("data-inline-panel-child-move-down", result)
-        self.assertIn("data-inline-panel-child-drag", result)
+        self.assertIn('data-w-orderable-target="up"', result)
+        self.assertIn('data-w-orderable-target="down"', result)
+        self.assertIn('data-w-orderable-target="handle"', result)
 
     def test_render_with_panel_overrides(self):
         """
