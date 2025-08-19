@@ -23,9 +23,9 @@ enum Direction {
  * @example
  * ```html
  * <fieldset data-controller="w-orderable" data-w-orderable-url-value="/path/to/orderable/">
- *  <input type="button" data-w-orderable-target="item" data-w-orderable-item-id="1" value="Item 1"/>
- *  <input type="button" data-w-orderable-target="item" data-w-orderable-item-id="2" value="Item 2"/>
- *  <input type="button" data-w-orderable-target="item" data-w-orderable-item-id="3" value="Item 3"/>
+ *   <input type="button" data-w-orderable-target="item" data-w-orderable-item-id="1" value="Item 1"/>
+ *   <input type="button" data-w-orderable-target="item" data-w-orderable-item-id="2" value="Item 2"/>
+ *   <input type="button" data-w-orderable-target="item" data-w-orderable-item-id="3" value="Item 3"/>
  * </fieldset>
  * ```
  */
