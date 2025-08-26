@@ -56,7 +56,7 @@ export class SyncController extends Controller<HTMLInputElement> {
    * default.
    */
   connect() {
-    this.processTargetElements('start', true);
+    this.processTargetElements('start', {}, true);
     this.apply = debounce(this.apply.bind(this), this.debounceValue);
   }
 
@@ -96,46 +96,16 @@ export class SyncController extends Controller<HTMLInputElement> {
    * Applying of the value to the targets can be done with a delay,
    * based on the controller's `delayValue`.
    */
-  // apply() {
-  //   const name = this.nameValue || '';
-  //   const valueToApply = this.value;
-
-  //   const eventName = ['apply', name].filter(Boolean).join(':');
-
-  //   const applyValue = (target: HTMLInputElement) => {
-  //     // dispatch an event before applying to check if it should be prevented
-  //     if (
-  //       !this.dispatch(['before-apply', name].filter(Boolean).join(':'), {
-  //         bubbles: true,
-  //         cancelable: true,
-  //         // Allow sending of current and future items
-  //         detail: { element: this.element.value, updated: valueToApply },
-  //       }).defaultPrevented
-  //     )
-  //       /* use setter to correctly update value in non-inputs (e.g. select) */ // eslint-disable-next-line no-param-reassign
-  //       target.value = valueToApply;
-
-  //     if (this.quietValue) return;
-
-  //     this.dispatch('change', { cancelable: false, prefix: '', target });
-  //   };
-
-  //   this.processTargetElements(eventName).forEach((target) => {
-  //     if (this.delayValue) {
-  //       setTimeout(() => {
-  //         applyValue(target);
-  //       }, this.delayValue);
-  //     } else {
-  //       applyValue(target);
-  //     }
-  //   });
-  // }
   apply({
-    params: { bubbles = false } = {},
-  }: Event & { params?: { bubbles?: boolean; name?: string } }) {
+    // This method can accept a param instead of the element value
+    params: { bubbles = false, apply } = {},
+  }: Event & {
+    params?: { bubbles?: boolean; name?: string; apply?: string };
+  }) {
+    const valueToApply = apply ?? this.value;
     const applyValue = (target: HTMLInputElement) => {
       // Use setter to correctly update value in non-inputs (e.g. select)
-      target.value = this.value;
+      target.value = valueToApply;
       if (this.quietValue) return;
       this.dispatch('change', { cancelable: false, prefix: '', target });
     };
@@ -206,7 +176,11 @@ export class SyncController extends Controller<HTMLInputElement> {
         bubbles: false,
         cancelable: true,
         ...options, // allow overriding some options but not detail & target
-        detail: { element: this.element, name, value: this.value },
+        detail: {
+          element: this.element,
+          ...(name ? { name } : {}), // only include name if set
+          value: this.value,
+        },
         target: target as HTMLInputElement,
       });
 
